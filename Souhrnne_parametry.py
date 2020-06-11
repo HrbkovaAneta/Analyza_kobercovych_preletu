@@ -21,8 +21,8 @@ extension = 'csv'
 all_filenames = [i for i in glob.glob('*.{}'.format(extension))]
 
 ###Zapisujeme postupně do souboru:
-vystup = open('Tabulka - lety.csv', 'w', encoding='utf-8')
-vystup.write("Název letu, Datum, Čas startu, Část dne, Trvaní, Vzdálenost prvního a posledního bodu, Celková vzdálenost, Počet bodů, Počet bodů na km, Počet otáček, Počet přímek, Detekce letu\n")
+source = open('Tabulka - lety.csv', 'w', encoding='utf-8')
+source.write("Název letu, Datum, Čas startu, Část dne, Trvání, Vzdálenost prvního a posledního bodu, Celková vzdálenost, Počet bodů, Počet bodů na km, Počet otáček, Počet přímek, Detekce letu\n")
 
 for name in all_filenames:
   df = pd.read_csv(name)
@@ -114,26 +114,26 @@ for name in all_filenames:
   lines = lines[lines["Difference"]==180]
   
   ###Postupně otevřu soubory csv
-  subor = open(name)
-  vstup = [cislo.strip() for cislo in subor]
-  subor.close()
+  file = open(name)
+  input_number = [number.strip() for number in file]
+  file.close()
 
   ###Pracujeme bez hlavičky souboru
-  vstup = vstup[1:]
-  vstup = [cislo.replace('"','') for cislo in vstup]
-  vstup = [cislo.split(',') for cislo in vstup]
+  input_number = input_number[1:]
+  input_number = [number.replace('"','') for number in input_number]
+  input_number = [number.split(',') for number in input_number]
 
   ###Vytvorim si list s časy
-  casy = [cas[1] for cas in vstup]
+  times = [time[1] for time in input_number]
 
   ###Vytvořím list hodin, kterou upravím funkcí converTime 
-  hodiny =[]
-  for cas in casy:
-    novycas =str(convertTime(cas))
-    hodiny.append(novycas)
+  hours =[]
+  for time in times:
+    new_time =str(convertTime(time))
+    hours.append(new_time)
     
   ###Delta posledního času a prvního v seznamu
-  Duration = datetime.strptime(hodiny[-1], '%H:%M:%S') - datetime.strptime(hodiny[0], '%H:%M:%S')
+  Duration = datetime.strptime(hours[-1], '%H:%M:%S') - datetime.strptime(hours[0], '%H:%M:%S')
 
   ###Atributy
   Linie = len(lines)
@@ -166,7 +166,7 @@ for name in all_filenames:
     Part_of_day = 'Night'
 
 ###Zapíšem všechny hodnoty do souboru
-  vystup.write(name + "," + str(Date) + "," + str(Start_time) + "," + str(Part_of_day) + "," + str(Duration) + "," + str(Distance_F_a_L) + "," + str(Total_distance) + "," + str(Points) + "," + str(Points_km) + "," + str(Turn) + "," + str(Linie) + "," + str(Detection) + "\n")
+  source.write(name + "," + str(Date) + "," + str(Start_time) + "," + str(Part_of_day) + "," + str(Duration) + "," + str(Distance_F_a_L) + "," + str(Total_distance) + "," + str(Points) + "," + str(Points_km) + "," + str(Turn) + "," + str(Linie) + "," + str(Detection) + "\n")
 
 ###Ukončím zápis do souboru:
-vystup.close()
+source.close()
